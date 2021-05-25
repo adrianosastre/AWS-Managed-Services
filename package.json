@@ -22,6 +22,10 @@
   },
   "dependencies": {
     "@aws-cdk/core": "1.104.0",
+    "@aws-cdk/aws-apigateway": "1.104.0",
+    "@aws-cdk/aws-lambda-nodejs": "1.104.0",
+    "@aws-cdk/aws-dynamodb": "1.104.0",
+    "aws-xray-sdk": "3.3.3",
     "source-map-support": "^0.5.16"
   }
 }
