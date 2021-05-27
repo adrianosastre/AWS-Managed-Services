@@ -2,6 +2,7 @@ import * as cdk from '@aws-cdk/core';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as lambdaNodeJS from '@aws-cdk/aws-lambda-nodejs';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
+import * as sqs from '@aws-cdk/aws-sqs';
 
 export class ProductsFunctionCdkStack extends cdk.Stack {
   readonly handler: lambdaNodeJS.NodejsFunction;
@@ -9,15 +10,10 @@ export class ProductsFunctionCdkStack extends cdk.Stack {
   constructor(
     scope: cdk.Construct,
     id: string,
-    productsDdb:
-    dynamodb.Table,
+    productsDdb: dynamodb.Table,
+    productsEventsQueue: sqs.Queue,
     props?: cdk.StackProps) {
     super(scope, id, props);
-
-    const awsRegion = new cdk.CfnParameter(this, 'awsRegion', {
-      type: 'String',
-      description: 'The AWS Region',
-    });
 
     this.handler = new lambdaNodeJS.NodejsFunction(this, 'ProductsFunction', {
       functionName: 'ProductsFunction',
@@ -32,10 +28,11 @@ export class ProductsFunctionCdkStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(30),
       environment: {
         PRODUCTS_DDB: productsDdb.tableName,
-        REGION: awsRegion.valueAsString,
+        PRODUCT_EVENTS_QUEUE_URL: productsEventsQueue.queueUrl,
       },
     });
 
-    productsDdb.grantReadWriteData(this.handler);
+    productsDdb.grantReadWriteData(this.handler); // dar permissão ao lambda para ler/escrever na tabela
+    productsEventsQueue.grantSendMessages(this.handler); // dar permissão ao lambda escrever nessa fila
   }
 }

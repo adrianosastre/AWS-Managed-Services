@@ -15,9 +15,7 @@ export class ProductsDdbStack extends cdk.Stack {
                 name: 'id',
                 type: dynamodb.AttributeType.STRING,
             },
-            billingMode: dynamodb.BillingMode.PROVISIONED, // modo de cobrança sob demanda ou provisionado
-            readCapacity: 1,
-            writeCapacity: 1,
+            billingMode: dynamodb.BillingMode.PAY_PER_REQUEST, // modo de cobrança sob demanda ou provisionado
         });
     }
 }
