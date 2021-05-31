@@ -5,7 +5,12 @@ import * as cwlogs from '@aws-cdk/aws-logs';
 
 export class ProductsApiStack extends cdk.Stack {
 
-    constructor(scope: cdk.Construct, id: string, productsHandler: lambdaNodeJS.NodejsFunction, props?: cdk.StackProps) {
+    constructor(
+        scope: cdk.Construct,
+        id: string,
+        productsHandler: lambdaNodeJS.NodejsFunction,
+        invoiceImportHandler: lambdaNodeJS.NodejsFunction,
+        props?: cdk.StackProps) {
         super(scope, id, props);
 
         const logGroup = new cwlogs.LogGroup(this, 'ProductsApiLog');
@@ -52,5 +57,18 @@ export class ProductsApiStack extends cdk.Stack {
         productResource.addMethod('GET', productsFunctionIntegration);
         productResource.addMethod('PUT', productsFunctionIntegration);
         productResource.addMethod('DELETE', productsFunctionIntegration);
+
+        // resource "/invoices":
+        // POST /invoices:
+
+        // criando integração api gateway - função:
+        const invoiceImportFunctionIntegration = new apigateway.LambdaIntegration(invoiceImportHandler, {
+            requestTemplates: {
+                'application/json': '{"statusCode: 200"}',
+            }
+        });
+
+        const invoicesResource = api.root.addResource('invoices');
+        invoicesResource.addMethod('POST', invoiceImportFunctionIntegration);
     }
 }
