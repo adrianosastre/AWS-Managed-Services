@@ -36,7 +36,7 @@ exports.handler = async function(event, context) {
 
 function createEvent(body, messageId) {
     const timestamp = Date.now();
-    const ttl = ~~(timestamp / 1000 + 5 * 60); // 5 minutes ahead
+    const ttl = ~~(timestamp / 1000 + 60 * 60); // 60 minutes ahead
 
     try {
         return ddbClient.put({
@@ -45,12 +45,14 @@ function createEvent(body, messageId) {
                 pk: `#product_${body.productCode}`,
                 sk: `${body.eventType}_${timestamp}`,
                 ttl: ttl, // valor em segundos a partir de quando o registro foi criado, para ser apagado no futuro
-                requestId: body.requesId,
-                eventType: body.eventType,
-                productId: body.productId,
                 username: body.username,
                 createdAt: timestamp,
-                messageId: messageId,
+                attributes: {
+                    requestId: body.requesId,
+                    eventType: body.eventType,
+                    productId: body.productId,
+                    messageId: messageId,
+                },
             },
         }).promise();
     }

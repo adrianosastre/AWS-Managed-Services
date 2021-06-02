@@ -13,6 +13,7 @@ export class InvoiceImportFunctionStack extends cdk.Stack {
         scope: cdk.Construct,
         id: string,
         invoicesDdb: dynamodb.Table,
+        invoiceEventsHandler: lambdaNodeJS.NodejsFunction,
         props?: cdk.StackProps) {
         super(scope, id, props);
 
@@ -36,10 +37,13 @@ export class InvoiceImportFunctionStack extends cdk.Stack {
             timeout: cdk.Duration.seconds(30),
             environment: {
               INVOICES_DDB: invoicesDdb.tableName,
+              INVOICE_EVENTS_FUNCTION_NAME: invoiceEventsHandler.functionName,
             },
         });
 
         invoicesDdb.grantReadWriteData(this.importHandler); // dá permissão de escrita/leitura ao lambda à tabela
+
+        invoiceEventsHandler.grantInvoke(this.importHandler); // permite a esse lambda invocar o outro
 
         // s3 to invoke the lambda:
         bucket.addEventNotification(

@@ -9,6 +9,7 @@ import { ProductEventsFunctionStack } from './../lib/productEventsFunction_cdk-s
 import { EventsDdbStack } from './../lib/eventsDdb_cdk-stack';
 import { InvoicesDdbStack } from './../lib/invoicesDdb_cdk-stack';
 import { InvoiceImportFunctionStack } from './../lib/invoiceImportFunction_cdk-stack';
+import { InvoiceEventsFunctionStack } from './../lib/invoiceEventsFunction_cdk-stack';
 
 const app = new cdk.App();
 
@@ -36,7 +37,7 @@ productsFunctionStack.addDependency(productEventsQueueStack);
 
 // Stack da tabela de eventos:
 const eventsDdbStack = new EventsDdbStack(
-    app, 
+    app,
     'EventsDdbStack'
 );
 
@@ -56,13 +57,23 @@ const invoicesDdbStack = new InvoicesDdbStack(
     'InvoicesDdbStack'
 );
 
+// Stack da função lambda de eventos de invoices:
+const invoiceEventsFunctionStack = new InvoiceEventsFunctionStack(
+    app,
+    'InvoiceEventsFunctionStack',
+    eventsDdbStack.table
+);
+invoiceEventsFunctionStack.addDependency(eventsDdbStack);
+
 // Stack do S3 e da função lambda de importação de pedidos:
 const invoiceImportFunctionStack = new InvoiceImportFunctionStack(
     app,
     'InvoiceImportFunctionStack',
-    invoicesDdbStack.table
+    invoicesDdbStack.table,
+    invoiceEventsFunctionStack.handler,
 );
 invoiceImportFunctionStack.addDependency(invoicesDdbStack);
+invoiceImportFunctionStack.addDependency(invoiceEventsFunctionStack);
 
 // Stack da API Gateway:
 const productsApiStack = new ProductsApiStack(

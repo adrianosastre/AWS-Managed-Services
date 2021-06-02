@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const AWSXRay = require('aws-xray-sdk-core');
+const uuid = require('uuid');
 
 // código a ser executado na inicialização do lambda:
 
@@ -19,8 +20,38 @@ const s3Client = new AWS.S3({
 
 // a partir daqui faz parte da invocação do lambda:
 exports.handler = async function(event, context) {
-    console.debug(event);
-    console.debug(context);
+    console.debug('event', event); // evento vindo de um api gateway
+    console.debug('context', context);
+    const method = event.httpMethod;
 
-    return {};
+    const apiGwRequestId = event.requestContext.requestId; // request id da api gtw (chamou o lambda)
+    const lambdaRequestId = context.awsRequestId; // request id do lambda
+
+    console.log(`API Gateway Request Id: ${apiGwRequestId} , Lambda Request Id: ${lambdaRequestId}`);
+
+    if (method == 'POST') {
+        const key = uuid.v4();
+        const params = {
+            Bucket: bucketName,
+            Key: key, // file name in s3
+            Expires: 300, // time in seconds
+        };
+
+        const signedUrl = await s3Client.getSignedUrl('putObject', params);
+        console.info('signedUrl:', signedUrl);
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                url: signedUrl,
+                expires: 300,
+            }),
+        };
+    }
+
+    return {
+        statusCode: 400,
+        headers: {},
+        body: JSON.stringify('Bad request'),
+    };
 }

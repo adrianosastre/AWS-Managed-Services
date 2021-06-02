@@ -2,8 +2,8 @@ import * as cdk from '@aws-cdk/core';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as lambdaNodeJS from '@aws-cdk/aws-lambda-nodejs';
 import * as sqs from '@aws-cdk/aws-sqs';
-import { SqsEventSource } from '@aws-cdk/aws-lambda-event-sources';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
+import { SqsEventSource } from '@aws-cdk/aws-lambda-event-sources';
 
 export class ProductEventsFunctionStack extends cdk.Stack {
   readonly handler: lambdaNodeJS.NodejsFunction;

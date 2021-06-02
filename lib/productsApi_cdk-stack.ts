@@ -10,6 +10,7 @@ export class ProductsApiStack extends cdk.Stack {
         id: string,
         productsHandler: lambdaNodeJS.NodejsFunction,
         invoiceImportHandler: lambdaNodeJS.NodejsFunction,
+        // productEventsFetchHandler: lambdaNodeJS.NodejsFunction,
         props?: cdk.StackProps) {
         super(scope, id, props);
 
@@ -43,6 +44,7 @@ export class ProductsApiStack extends cdk.Stack {
         // PUT /products/{id} = update a product by id
         // DELETE /products/{id} = delete a product by id
 
+        // criando integração api gateway - função lambda para encaminhar a função:
         const productsFunctionIntegration = new apigateway.LambdaIntegration(productsHandler, {
             requestTemplates: {
                 'application/json': '{"statusCode: 200"}',
@@ -57,6 +59,24 @@ export class ProductsApiStack extends cdk.Stack {
         productResource.addMethod('GET', productsFunctionIntegration);
         productResource.addMethod('PUT', productsFunctionIntegration);
         productResource.addMethod('DELETE', productsFunctionIntegration);
+
+        // resource /products/events :
+        // GET /products/events/{code} -> fetch all product events by product code
+        // GET /products/events/{code}/{event} -> fetch all product events by product code and event type
+
+        // criando integração api gateway - função de eventos de produtos:
+        /*const productsEventsFetchFunctionIntegration =
+            new apigateway.LambdaIntegration(productEventsFetchHandler, {
+                requestTemplates: {
+                    'application/json': '{"statusCode: 200"}',
+                }
+        });
+
+        const productEventsResource = productResource.addResource('events');
+        const productEventsByCodeResource = productEventsResource.addResource('{code}');
+        productEventsByCodeResource.addMethod('GET', productsEventsFetchFunctionIntegration);
+        const productEventsByCodeAndEventResource = productEventsByCodeResource.addResource('{event}');
+        productEventsByCodeAndEventResource.addMethod('GET', productsEventsFetchFunctionIntegration);*/
 
         // resource "/invoices":
         // POST /invoices:
