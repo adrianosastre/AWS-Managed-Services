@@ -49,7 +49,7 @@ This project's intention is to demostrate the use of the following AWS Managed S
 * Cognito
     * APIs authentication / authorization
 
-[![Architecture](arch.png)]
+[![Architecture](architecture.png)]
 
 # Instructions to get the environment ready
 
