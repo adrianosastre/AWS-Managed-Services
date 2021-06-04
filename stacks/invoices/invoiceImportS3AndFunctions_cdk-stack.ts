@@ -5,7 +5,7 @@ import * as dynamodb from '@aws-cdk/aws-dynamodb';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as s3n from '@aws-cdk/aws-s3-notifications';
 
-export class InvoiceImportFunctionStack extends cdk.Stack {
+export class InvoiceImportS3AndFunctionsStack extends cdk.Stack {
     readonly urlHandler: lambdaNodeJS.NodejsFunction;
     readonly importHandler: lambdaNodeJS.NodejsFunction;
 
@@ -26,7 +26,7 @@ export class InvoiceImportFunctionStack extends cdk.Stack {
         // create a function to handle import:
         this.importHandler = new lambdaNodeJS.NodejsFunction(this, 'InvoiceImportFunction', {
             functionName: 'InvoiceImportFunction',
-            entry: 'lambdas/invoiceImportFunction.js',
+            entry: 'lambdas/invoices/invoiceImportFunction.js',
             handler: 'handler',
             bundling: {
               minify: false,
@@ -57,7 +57,7 @@ export class InvoiceImportFunctionStack extends cdk.Stack {
         // create function to generate url to import files:
         this.urlHandler = new lambdaNodeJS.NodejsFunction(this, 'InvoiceUrlFunction', {
             functionName: 'InvoiceUrlFunction',
-            entry: 'lambdas/invoiceUrlFunction.js',
+            entry: 'lambdas/invoices/invoiceUrlFunction.js',
             handler: 'handler',
             bundling: {
               minify: false,

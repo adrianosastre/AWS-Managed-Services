@@ -17,14 +17,13 @@ const ddbClient = new AWS.DynamoDB.DocumentClient(); // cliente que se conecta n
 
 // a partir daqui faz parte da invocação do lambda:
 exports.handler = async function(event, context) {
-    console.log("event: ", event);
+    console.debug('event: ', event);
 
     const promises = [];
 
     event.Records.forEach(record => {
-        console.log(`Message Id: ${record.messageId}`);
         const body = JSON.parse(record.body);
-        console.log(`Message Body:`, body);
+        console.debug(`Message Id: ${record.messageId} Body:`, body);
 
         promises.push(createEvent(body, record.messageId));
     });
@@ -36,7 +35,7 @@ exports.handler = async function(event, context) {
 
 function createEvent(body, messageId) {
     const timestamp = Date.now();
-    const ttl = ~~(timestamp / 1000 + 60 * 60); // 60 minutes ahead
+    const ttl = ~~(timestamp / 1000 + 60 * 60 * 24 * 7); // 1 semana
 
     try {
         return ddbClient.put({

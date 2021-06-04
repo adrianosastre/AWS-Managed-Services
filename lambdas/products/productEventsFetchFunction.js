@@ -16,29 +16,47 @@ const ddbClient = new AWS.DynamoDB.DocumentClient(); // cliente que se conecta n
 
 // a partir daqui faz parte da invocação do lambda:
 exports.handler = async function (event, context) {
-    console.log('event:', event);
-    console.log('context:', context);
+    console.debug('event:', event);
+    console.debug('context:', context);
 
     const apiGwRequestId = event.requestContext.requestId; // request id da api gtw (chamou o lambda)
     const lambdaRequestId = context.awsRequestId; // request id do lambda
 
-    console.log(`API Gateway Request Id: ${apiGwRequestId} , Lambda Request Id: ${lambdaRequestId}`);
+    console.debug(`API Gateway Request Id: ${apiGwRequestId} , Lambda Request Id: ${lambdaRequestId}`);
 
     if (event.resource === '/products/events/{code}') {
-        const data = await getEventsByCode(event.pathParameters.code);
+        const code = event.pathParameters.code;
+        const data = await getEventsByCode(code);
+
+        const events = convertItemsToEvents(data.Items);
+        console.log(`GET /product/events/${code} will return 200 OK with ${events.length} events:`, events);
+
         return {
-            body: JSON.stringify(convertItemsToEvents(data.Items)),
+            body: JSON.stringify(events),
         };
+
     } else if (event.resource === '/products/events/{code}/{event}') {
-        const data = await getEventsByCodeAndEvent(event.pathParameters.code, event.pathParameters.event);
+        const code = event.pathParameters.code;
+        const evt = event.pathParameters.event;
+        const data = await getEventsByCodeAndEvent(code, evt);
+
+        const events = convertItemsToEvents(data.Items);
+        console.log(`GET /product/events/${code}/${evt} will return 200 OK with ${events.length} events:`, events);
+
         return {
-            body: JSON.stringify(convertItemsToEvents(data.Items)),
+            body: JSON.stringify(events),
         };
+
     } else if (event.resource === '/products/events') {
         if (event.queryStringParameters && event.queryStringParameters.username) {
-            const data = await getEventsByUsername(event.queryStringParameters.username);
+            const username = event.queryStringParameters.username;
+            const data = await getEventsByUsername(username);
+
+            const events = convertItemsToEvents(data.Items);
+            console.log(`GET /product/events?username=${username} will return 200 OK with ${events.length} events:`, events);
+
             return {
-                body: JSON.stringify(convertItemsToEvents(data.Items)),
+                body: JSON.stringify(events),
             };
         }
     }

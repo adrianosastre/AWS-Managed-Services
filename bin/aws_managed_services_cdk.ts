@@ -8,7 +8,7 @@ import { ProductEventsQueueStack } from '../stacks/events/productEventsQueue_cdk
 import { ProductEventsFunctionStack } from '../stacks/events/productEventsFunction_cdk-stack';
 import { EventsDdbStack } from '../stacks/events/eventsDdb_cdk-stack';
 import { InvoicesDdbStack } from '../stacks/invoices/invoicesDdb_cdk-stack';
-import { InvoiceImportFunctionStack } from '../stacks/invoices/invoiceImportFunction_cdk-stack';
+import { InvoiceImportS3AndFunctionsStack } from '../stacks/invoices/invoiceImportS3AndFunctions_cdk-stack';
 import { InvoiceEventsFunctionStack } from '../stacks/events/invoiceEventsFunction_cdk-stack';
 import { ProductEventsFetchFunctionStack } from '../stacks/products/productEventsFetchFunction_cdk-stack';
 
@@ -66,15 +66,15 @@ const invoiceEventsFunctionStack = new InvoiceEventsFunctionStack(
 );
 invoiceEventsFunctionStack.addDependency(eventsDdbStack);
 
-// Stack do S3 e da função lambda de importação de pedidos:
-const invoiceImportFunctionStack = new InvoiceImportFunctionStack(
+// Stack do S3 e das funções lambda de importação de pedidos:
+const invoiceImportS3AndFunctionsStack = new InvoiceImportS3AndFunctionsStack(
     app,
-    'InvoiceImportFunctionStack',
+    'InvoiceImportS3AndFunctionsStack',
     invoicesDdbStack.table,
     invoiceEventsFunctionStack.handler,
 );
-invoiceImportFunctionStack.addDependency(invoicesDdbStack);
-invoiceImportFunctionStack.addDependency(invoiceEventsFunctionStack);
+invoiceImportS3AndFunctionsStack.addDependency(invoicesDdbStack);
+invoiceImportS3AndFunctionsStack.addDependency(invoiceEventsFunctionStack);
 
 const productEventsFetchFunctionStack = new ProductEventsFetchFunctionStack(
     app,
@@ -87,10 +87,10 @@ const apiStack = new ApiStack(
     app,
     'ApiStack',
     productsFunctionStack.handler,
-    invoiceImportFunctionStack.urlHandler,
+    invoiceImportS3AndFunctionsStack.urlHandler,
     productEventsFetchFunctionStack.handler
 );
 productsFunctionStack.addDependency(productsFunctionStack);
-productsFunctionStack.addDependency(invoiceImportFunctionStack);
+productsFunctionStack.addDependency(invoiceImportS3AndFunctionsStack);
 productsFunctionStack.addDependency(productEventsFetchFunctionStack);
 

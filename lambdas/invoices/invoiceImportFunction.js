@@ -26,7 +26,7 @@ exports.handler = async function(event, context) {
     console.debug('event:', event);
     console.debug('context:', context);
 
-    console.log('event.Records[0].s3', event.Records[0].s3);
+    console.debug('event.Records[0].s3', event.Records[0].s3);
 
     const params = {
         Bucket: event.Records[0].s3.bucket.name,
@@ -36,7 +36,7 @@ exports.handler = async function(event, context) {
     // download file:
     const object = await s3Client.getObject(params).promise();
     const invoice = JSON.parse(object.Body.toString('utf-8')); // conteúdo do arquivo
-    console.log('invoice:', invoice);
+    console.debug('invoice contents:', invoice);
 
     // guardar na tabela e apagar o arquivo:
     const createInvoicePromise = createInvoice(invoice, params.Key);
@@ -48,7 +48,7 @@ exports.handler = async function(event, context) {
         createInvoiceEventPromise
     ]);
 
-    console.log('Resposta da execução da função:', results[2]);
+    console.log('createInvoiceEvent function response:', results[2]);
 
     return {};
 }
@@ -62,7 +62,7 @@ function createInvoiceEvent(invoice, key) {
             key: key,
         }),
     };
-    console.log('invoke with params: ', params);
+    console.log(`invoke lambda ${invoiceEventsFunctionName} with params: `, params);
     return lambdaClient.invoke(params).promise();
 }
 

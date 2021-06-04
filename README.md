@@ -44,8 +44,9 @@ This project's intention is to demostrate the use of the following AWS Managed S
     * Event notification
 * SQS
     * Dead letter queue (DLQ) configuration
-* CloudWatch / XRay
-    * Configuration in stacks and Lambdas code
+* CloudWatch Logs and X-Ray
+    * Configuration in stacks and lambdas code
+    * Log levels
 * Cognito
     * APIs authentication / authorization
 

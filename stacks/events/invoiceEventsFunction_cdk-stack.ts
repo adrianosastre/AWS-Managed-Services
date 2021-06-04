@@ -20,7 +20,7 @@ export class InvoiceEventsFunctionStack extends cdk.Stack {
 
         this.handler = new lambdaNodeJS.NodejsFunction(this, 'InvoiceEventsFunction', {
             functionName: 'InvoiceEventsFunction',
-            entry: 'lambdas/invoiceEventsFunction.js',
+            entry: 'lambdas/events/invoiceEventsFunction.js',
             handler: 'handler',
             bundling: {
               minify: false,

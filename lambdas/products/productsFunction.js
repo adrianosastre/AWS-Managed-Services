@@ -19,14 +19,14 @@ const sqsClient = new AWS.SQS({apiVersion: '2012-11-05'}); // cliente que se con
 
 // a partir daqui faz parte da invocação do lambda:
 exports.handler = async function(event, context) {
-    console.log('event:', event);
-    console.log('context:', context);
+    console.debug('event:', event);
+    console.debug('context:', context);
     const method = event.httpMethod;
 
     const apiGwRequestId = event.requestContext.requestId; // request id da api gtw (chamou o lambda)
     const lambdaRequestId = context.awsRequestId; // request id do lambda
 
-    console.log(`API Gateway Request Id: ${apiGwRequestId} , Lambda Request Id: ${lambdaRequestId}`);
+    console.debug(`API Gateway Request Id: ${apiGwRequestId} , Lambda Request Id: ${lambdaRequestId}`);
 
     if (event.resource === '/products') {
         if (method === 'GET') {

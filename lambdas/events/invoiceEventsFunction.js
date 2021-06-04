@@ -16,7 +16,7 @@ const ddbClient = new AWS.DynamoDB.DocumentClient(); // cliente que se conecta n
 
 // a partir daqui faz parte da invocação do lambda:
 exports.handler = async function(event, context) {
-    console.log('event: ', event);
+    console.debug('event: ', event);
 
     await createEvent(event.invoice, event.key);
 
@@ -29,7 +29,7 @@ exports.handler = async function(event, context) {
 
 function createEvent(invoice, key) {
     const timestamp = Date.now();
-    const ttl = ~~(timestamp / 1000 + 60 * 60); // 60 minutos
+    const ttl = ~~(timestamp / 1000 + 60 * 60 * 24 * 7); // 1 semana
     try {
         return ddbClient.put({
             TableName: invoiceEventsDdb,

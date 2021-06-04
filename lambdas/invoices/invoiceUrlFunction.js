@@ -27,7 +27,7 @@ exports.handler = async function(event, context) {
     const apiGwRequestId = event.requestContext.requestId; // request id da api gtw (chamou o lambda)
     const lambdaRequestId = context.awsRequestId; // request id do lambda
 
-    console.log(`API Gateway Request Id: ${apiGwRequestId} , Lambda Request Id: ${lambdaRequestId}`);
+    console.debug(`API Gateway Request Id: ${apiGwRequestId} , Lambda Request Id: ${lambdaRequestId}`);
 
     if (method == 'POST') {
         const key = uuid.v4();
