@@ -39,9 +39,7 @@ function createEvent(invoice, key) {
                 ttl: ttl,
                 username: invoice.customerName,
                 createdAt: timestamp,
-                attributes: {
-                    key: key,
-                },
+                key: key,
             },
         }).promise();
     } catch (err) {

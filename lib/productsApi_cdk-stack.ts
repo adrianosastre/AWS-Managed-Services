@@ -10,7 +10,7 @@ export class ProductsApiStack extends cdk.Stack {
         id: string,
         productsHandler: lambdaNodeJS.NodejsFunction,
         invoiceImportHandler: lambdaNodeJS.NodejsFunction,
-        // productEventsFetchHandler: lambdaNodeJS.NodejsFunction,
+        productEventsFetchHandler: lambdaNodeJS.NodejsFunction,
         props?: cdk.StackProps) {
         super(scope, id, props);
 
@@ -65,18 +65,20 @@ export class ProductsApiStack extends cdk.Stack {
         // GET /products/events/{code}/{event} -> fetch all product events by product code and event type
 
         // criando integração api gateway - função de eventos de produtos:
-        /*const productsEventsFetchFunctionIntegration =
+        const productsEventsFetchFunctionIntegration =
             new apigateway.LambdaIntegration(productEventsFetchHandler, {
                 requestTemplates: {
                     'application/json': '{"statusCode: 200"}',
                 }
         });
 
-        const productEventsResource = productResource.addResource('events');
+        const productEventsResource = productsResource.addResource('events');
+        productEventsResource.addMethod('GET', productsEventsFetchFunctionIntegration);
+
         const productEventsByCodeResource = productEventsResource.addResource('{code}');
         productEventsByCodeResource.addMethod('GET', productsEventsFetchFunctionIntegration);
         const productEventsByCodeAndEventResource = productEventsByCodeResource.addResource('{event}');
-        productEventsByCodeAndEventResource.addMethod('GET', productsEventsFetchFunctionIntegration);*/
+        productEventsByCodeAndEventResource.addMethod('GET', productsEventsFetchFunctionIntegration);
 
         // resource "/invoices":
         // POST /invoices:

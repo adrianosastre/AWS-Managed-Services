@@ -43,16 +43,14 @@ function createEvent(body, messageId) {
             TableName: productEventsDdb,
             Item: {
                 pk: `#product_${body.productCode}`,
-                sk: `${body.eventType}_${timestamp}`,
+                sk: `${body.eventType}#${timestamp}`,
                 ttl: ttl, // valor em segundos a partir de quando o registro foi criado, para ser apagado no futuro
                 username: body.username,
                 createdAt: timestamp,
-                attributes: {
-                    requestId: body.requesId,
-                    eventType: body.eventType,
-                    productId: body.productId,
-                    messageId: messageId,
-                },
+                requestId: body.requesId,
+                eventType: body.eventType,
+                productId: body.productId,
+                messageId: messageId,
             },
         }).promise();
     }

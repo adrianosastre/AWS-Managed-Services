@@ -10,6 +10,7 @@ import { EventsDdbStack } from './../lib/eventsDdb_cdk-stack';
 import { InvoicesDdbStack } from './../lib/invoicesDdb_cdk-stack';
 import { InvoiceImportFunctionStack } from './../lib/invoiceImportFunction_cdk-stack';
 import { InvoiceEventsFunctionStack } from './../lib/invoiceEventsFunction_cdk-stack';
+import { ProductEventsFetchFunctionStack } from './../lib/productEventsFetchFunction_cdk-stack';
 
 const app = new cdk.App();
 
@@ -75,13 +76,21 @@ const invoiceImportFunctionStack = new InvoiceImportFunctionStack(
 invoiceImportFunctionStack.addDependency(invoicesDdbStack);
 invoiceImportFunctionStack.addDependency(invoiceEventsFunctionStack);
 
+const productEventsFetchFunctionStack = new ProductEventsFetchFunctionStack(
+    app,
+    'ProductEventsFetchFunctionStack',
+    eventsDdbStack.table
+);
+
 // Stack da API Gateway:
 const productsApiStack = new ProductsApiStack(
     app,
     'ProductsApiStack',
     productsFunctionStack.handler,
-    invoiceImportFunctionStack.urlHandler
+    invoiceImportFunctionStack.urlHandler,
+    productEventsFetchFunctionStack.handler
 );
 productsFunctionStack.addDependency(productsFunctionStack);
 productsFunctionStack.addDependency(invoiceImportFunctionStack);
+productsFunctionStack.addDependency(productEventsFetchFunctionStack);
 
