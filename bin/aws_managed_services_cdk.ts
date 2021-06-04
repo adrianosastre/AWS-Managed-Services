@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
-import { ProductsFunctionCdkStack } from '../lib/productsFunction_cdk-stack';
-import { ProductsApiStack } from '../lib/productsApi_cdk-stack';
-import { ProductsDdbStack } from '../lib/productsDdb_cdk-stack';
-import { ProductEventsQueueStack } from './../lib/productEventsQueue_cdk-stack';
-import { ProductEventsFunctionStack } from './../lib/productEventsFunction_cdk-stack';
-import { EventsDdbStack } from './../lib/eventsDdb_cdk-stack';
-import { InvoicesDdbStack } from './../lib/invoicesDdb_cdk-stack';
-import { InvoiceImportFunctionStack } from './../lib/invoiceImportFunction_cdk-stack';
-import { InvoiceEventsFunctionStack } from './../lib/invoiceEventsFunction_cdk-stack';
-import { ProductEventsFetchFunctionStack } from './../lib/productEventsFetchFunction_cdk-stack';
+import { ApiStack } from '../stacks/api/api_cdk-stack';
+import { ProductsFunctionCdkStack } from '../stacks/products/productsFunction_cdk-stack';
+import { ProductsDdbStack } from '../stacks/products/productsDdb_cdk-stack';
+import { ProductEventsQueueStack } from '../stacks/events/productEventsQueue_cdk-stack';
+import { ProductEventsFunctionStack } from '../stacks/events/productEventsFunction_cdk-stack';
+import { EventsDdbStack } from '../stacks/events/eventsDdb_cdk-stack';
+import { InvoicesDdbStack } from '../stacks/invoices/invoicesDdb_cdk-stack';
+import { InvoiceImportFunctionStack } from '../stacks/invoices/invoiceImportFunction_cdk-stack';
+import { InvoiceEventsFunctionStack } from '../stacks/events/invoiceEventsFunction_cdk-stack';
+import { ProductEventsFetchFunctionStack } from '../stacks/products/productEventsFetchFunction_cdk-stack';
 
 const app = new cdk.App();
 
@@ -23,7 +23,7 @@ const productsDdbStack = new ProductsDdbStack(
 // Stack da fila de eventos de produtos:
 const productEventsQueueStack = new ProductEventsQueueStack(
     app,
-    "ProductEventsQueueStack"
+    'ProductEventsQueueStack'
 );
 
 // Stack da função lambda de produtos:
@@ -83,9 +83,9 @@ const productEventsFetchFunctionStack = new ProductEventsFetchFunctionStack(
 );
 
 // Stack da API Gateway:
-const productsApiStack = new ProductsApiStack(
+const apiStack = new ApiStack(
     app,
-    'ProductsApiStack',
+    'ApiStack',
     productsFunctionStack.handler,
     invoiceImportFunctionStack.urlHandler,
     productEventsFetchFunctionStack.handler

@@ -1,0 +1,337 @@
+{
+	"info": {
+		"_postman_id": "a08c7337-71b1-46e0-83ca-cb42363d3984",
+		"name": "AWS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET all products",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "WeIq4b76NL9gZSMN6z9Yt8e1C6NlLGU8aGGHhubP",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://4eskhmc7gf.execute-api.us-east-1.amazonaws.com/prod/products",
+					"protocol": "https",
+					"host": [
+						"4eskhmc7gf",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET product by Id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "WeIq4b76NL9gZSMN6z9Yt8e1C6NlLGU8aGGHhubP",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://4eskhmc7gf.execute-api.us-east-1.amazonaws.com/prod/products/3519d8ed-8c41-43d0-b237-8261e814f602",
+					"protocol": "https",
+					"host": [
+						"4eskhmc7gf",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"products",
+						"3519d8ed-8c41-43d0-b237-8261e814f602"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Products Events by query string",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://4eskhmc7gf.execute-api.us-east-1.amazonaws.com/prod/products/events/COD1/PRODUCT_CREATED",
+					"protocol": "https",
+					"host": [
+						"4eskhmc7gf",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"products",
+						"events",
+						"COD1",
+						"PRODUCT_CREATED"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productName\": \"Product 5\",\r\n    \"price\": 5,\r\n    \"code\": \"COD5\",\r\n    \"model\": \"model5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://4eskhmc7gf.execute-api.us-east-1.amazonaws.com/prod/products",
+					"protocol": "https",
+					"host": [
+						"4eskhmc7gf",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Products Events by query string",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://4eskhmc7gf.execute-api.us-east-1.amazonaws.com/prod/products/events?username=JM",
+					"protocol": "https",
+					"host": [
+						"4eskhmc7gf",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"products",
+						"events"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "JM"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Product By Id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://oh7w5m4qf2.execute-api.us-east-1.amazonaws.com/prod/products/403ea001-3720-4f33-b622-268aeb318555",
+					"protocol": "https",
+					"host": [
+						"oh7w5m4qf2",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"products",
+						"403ea001-3720-4f33-b622-268aeb318555"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UPDATE Product",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productName\": \"Product One\",\r\n    \"price\": 11,\r\n    \"code\": \"COD1\",\r\n    \"model\": \"model1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://4eskhmc7gf.execute-api.us-east-1.amazonaws.com/prod/products/3519d8ed-8c41-43d0-b237-8261e814f602",
+					"protocol": "https",
+					"host": [
+						"4eskhmc7gf",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"products",
+						"3519d8ed-8c41-43d0-b237-8261e814f602"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Product",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://4eskhmc7gf.execute-api.us-east-1.amazonaws.com/prod/products/59200866-c564-4c61-987a-4c6e47af5ff6",
+					"protocol": "https",
+					"host": [
+						"4eskhmc7gf",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"products",
+						"59200866-c564-4c61-987a-4c6e47af5ff6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get URL to read invoice",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://4eskhmc7gf.execute-api.us-east-1.amazonaws.com/prod/invoices",
+					"protocol": "https",
+					"host": [
+						"4eskhmc7gf",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"invoices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ADD invoice file",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": "/C:/aws/Consultoria/AWS-Managed-Services/files/invoice 2.txt"
+					}
+				},
+				"url": {
+					"raw": "https://sastre-invoices.s3.amazonaws.com/f8fb2811-7969-49ea-9c06-721626e2a8c3?AWSAccessKeyId=ASIAVSZWQT63OUJK6G67&Expires=1622824466&Signature=d6GMjq8eEtxs7r8%2FyZnGg9b9jIs%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEGEaCXVzLWVhc3QtMSJHMEUCIQCadzLM9drd6dCFsPQgbDuyi5zhx3yJDGJq4X210Zkz3AIgcPNSaydsXulbZ1CXOxqNHZ4w5S9LlaWZx8y3Ju1fg4kqlwIIGhAAGgwzODM5NzcwMzc3NTAiDIiTxVnAwknsKkNY2yr0AZ8LbFAylhz4ENaMlSw258ZxGKysNaOqeOnNmAu9rEgWLyypQZTe3YM%2FVXjCRHPLpKi%2BzEMI3W5hVgA5k6sg1cyMPWjBWuxRURBnsZ1K6CVoznVOe0IqbTcdhdnWUiOdB%2B7Aul53WF8RlXxURjBdW7DPR4uRlgIrM9JWvrjGTEGR8qyqcaqVb0WCpmXq2x18T94b8za%2F2x6gaH2mWD57K%2Bv7DU8E3P%2BIefGfbNhy8hbukpngpV4kr%2FYUYyZFJnarV4l%2Bu82qwkVk29cm2lYyEBmDopgaiffIJNNYC6XIHvODt9k0ddnxR4GnCoYn65xZbmGyPLAw0KjphQY6mgFQ7P8ejPSnAl%2Bn3Og43NUSQycyX6fFaRLOTwjUZWmXNz7JYy6vDmd3BDCbYM08c6XShj2cOdbIArSsooFBuUvTLvH4YOmQ8tepatNvi09MsZVAx6sfoISoK4Qb8t6Sm6oX8SKJ7v2lR768nZgrQPhhT0xG71MAWYrKPBADpNcFFsho9IAt%2BnJXFgqp1rnpN8CV8Yd3vxNcyKaE",
+					"protocol": "https",
+					"host": [
+						"sastre-invoices",
+						"s3",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"f8fb2811-7969-49ea-9c06-721626e2a8c3"
+					],
+					"query": [
+						{
+							"key": "AWSAccessKeyId",
+							"value": "ASIAVSZWQT63OUJK6G67"
+						},
+						{
+							"key": "Expires",
+							"value": "1622824466"
+						},
+						{
+							"key": "Signature",
+							"value": "d6GMjq8eEtxs7r8%2FyZnGg9b9jIs%3D"
+						},
+						{
+							"key": "x-amz-security-token",
+							"value": "IQoJb3JpZ2luX2VjEGEaCXVzLWVhc3QtMSJHMEUCIQCadzLM9drd6dCFsPQgbDuyi5zhx3yJDGJq4X210Zkz3AIgcPNSaydsXulbZ1CXOxqNHZ4w5S9LlaWZx8y3Ju1fg4kqlwIIGhAAGgwzODM5NzcwMzc3NTAiDIiTxVnAwknsKkNY2yr0AZ8LbFAylhz4ENaMlSw258ZxGKysNaOqeOnNmAu9rEgWLyypQZTe3YM%2FVXjCRHPLpKi%2BzEMI3W5hVgA5k6sg1cyMPWjBWuxRURBnsZ1K6CVoznVOe0IqbTcdhdnWUiOdB%2B7Aul53WF8RlXxURjBdW7DPR4uRlgIrM9JWvrjGTEGR8qyqcaqVb0WCpmXq2x18T94b8za%2F2x6gaH2mWD57K%2Bv7DU8E3P%2BIefGfbNhy8hbukpngpV4kr%2FYUYyZFJnarV4l%2Bu82qwkVk29cm2lYyEBmDopgaiffIJNNYC6XIHvODt9k0ddnxR4GnCoYn65xZbmGyPLAw0KjphQY6mgFQ7P8ejPSnAl%2Bn3Og43NUSQycyX6fFaRLOTwjUZWmXNz7JYy6vDmd3BDCbYM08c6XShj2cOdbIArSsooFBuUvTLvH4YOmQ8tepatNvi09MsZVAx6sfoISoK4Qb8t6Sm6oX8SKJ7v2lR768nZgrQPhhT0xG71MAWYrKPBADpNcFFsho9IAt%2BnJXFgqp1rnpN8CV8Yd3vxNcyKaE"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

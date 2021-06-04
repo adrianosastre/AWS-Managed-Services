@@ -15,7 +15,7 @@ AWS.config.update({
 });
 
 const ddbClient = new AWS.DynamoDB.DocumentClient(); // cliente que se conecta no dynamo
-const sqsClient = new AWS.SQS({apiVersion: "2012-11-05"}); // cliente que se conecta ao sqs
+const sqsClient = new AWS.SQS({apiVersion: '2012-11-05'}); // cliente que se conecta ao sqs
 
 // a partir daqui faz parte da invocação do lambda:
 exports.handler = async function(event, context) {
@@ -47,7 +47,7 @@ exports.handler = async function(event, context) {
 
             const createProductPromise = createProduct(product);
 
-            const messageSentPromise = sendMessage(product, "PRODUCT_CREATED", "adrianosastre", lambdaRequestId);
+            const messageSentPromise = sendMessage(product, 'PRODUCT_CREATED', 'adrianosastre', lambdaRequestId);
 
             const results = await Promise.all([createProductPromise, messageSentPromise]);
 
@@ -93,7 +93,7 @@ exports.handler = async function(event, context) {
 
                 const updateProductPromise = updateProduct(productId, product);
 
-                const messageSentPromise = sendMessage(product, "PRODUCT_UPDATED", "gira", lambdaRequestId);
+                const messageSentPromise = sendMessage(product, 'PRODUCT_UPDATED', 'gira', lambdaRequestId);
 
                 const results = await Promise.all([updateProductPromise, messageSentPromise]);
                 console.debug(`PUT/${productId} data:`, results[0]);
@@ -123,7 +123,7 @@ exports.handler = async function(event, context) {
                 console.debug(`DELETE/${productId} data:`, data);
 
                 const product = data.Item;
-                const messageSent = await sendMessage(product, "PRODUCT_DELETED", "JM", lambdaRequestId);
+                const messageSent = await sendMessage(product, 'PRODUCT_DELETED', 'JM', lambdaRequestId);
 
                 console.log(`DELETE/${productId} sent PRODUCT_DELETED message with id: ${messageSent.MessageId}`);
                 console.log(`DELETE/${productId} will return 200 OK`);
@@ -213,14 +213,14 @@ function updateProduct(productId, product) {
             Key: {
                 id: productId,
             },
-            UpdateExpression: "set productName = :n, code = :c, price = :p, model= :m",
+            UpdateExpression: 'set productName = :n, code = :c, price = :p, model= :m',
             ExpressionAttributeValues: {
-                ":n": product.productName,
-                ":c": product.code,
-                ":p": product.price,
-                ":m": product.model,
+                ':n': product.productName,
+                ':c': product.code,
+                ':p': product.price,
+                ':m': product.model,
             },
-            ReturnValues: "UPDATED_NEW",
+            ReturnValues: 'UPDATED_NEW',
         }).promise();
     } catch (err) {
         return err;

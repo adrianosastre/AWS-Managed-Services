@@ -26,7 +26,7 @@ export class InvoiceImportFunctionStack extends cdk.Stack {
         // create a function to handle import:
         this.importHandler = new lambdaNodeJS.NodejsFunction(this, 'InvoiceImportFunction', {
             functionName: 'InvoiceImportFunction',
-            entry: 'lambda/invoiceImportFunction.js',
+            entry: 'lambdas/invoiceImportFunction.js',
             handler: 'handler',
             bundling: {
               minify: false,
@@ -57,7 +57,7 @@ export class InvoiceImportFunctionStack extends cdk.Stack {
         // create function to generate url to import files:
         this.urlHandler = new lambdaNodeJS.NodejsFunction(this, 'InvoiceUrlFunction', {
             functionName: 'InvoiceUrlFunction',
-            entry: 'lambda/invoiceUrlFunction.js',
+            entry: 'lambdas/invoiceUrlFunction.js',
             handler: 'handler',
             bundling: {
               minify: false,

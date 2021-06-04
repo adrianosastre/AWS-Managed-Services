@@ -1,8 +1,8 @@
 {
-  "name": "products01_cdk",
+  "name": "aws_managed_services_cdk",
   "version": "0.1.0",
   "bin": {
-    "products01_cdk": "bin/products01_cdk.js"
+    "aws_managed_services_cdk": "bin/aws_managed_services_cdk.js"
   },
   "scripts": {
     "build": "tsc",

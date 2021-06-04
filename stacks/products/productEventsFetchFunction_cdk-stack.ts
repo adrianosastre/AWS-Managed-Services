@@ -16,13 +16,13 @@ export class ProductEventsFetchFunctionStack extends cdk.Stack {
 
         this.handler = new lambdaNodeJS.NodejsFunction(this, 'ProductEventsFetchFunction', {
             functionName: 'ProductEventsFetchFunction',
-            entry: 'lambda/productEventsFetchFunction.js',
+            entry: 'lambdas/productEventsFetchFunction.js',
             handler: 'handler',
             bundling: {
               minify: false,
               sourceMap: false,
             },
-            tracing: lambda.Tracing.ACTIVE,
+            tracing: lambda.Tracing.ACTIVE, // Ativar X-Ray
             memorySize: 256,
             timeout: cdk.Duration.seconds(30),
             environment: {

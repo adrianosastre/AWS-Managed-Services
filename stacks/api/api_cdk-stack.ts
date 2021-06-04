@@ -3,7 +3,7 @@ import * as lambdaNodeJS from '@aws-cdk/aws-lambda-nodejs';
 import * as apigateway from '@aws-cdk/aws-apigateway';
 import * as cwlogs from '@aws-cdk/aws-logs';
 
-export class ProductsApiStack extends cdk.Stack {
+export class ApiStack extends cdk.Stack {
 
     constructor(
         scope: cdk.Construct,
@@ -14,11 +14,11 @@ export class ProductsApiStack extends cdk.Stack {
         props?: cdk.StackProps) {
         super(scope, id, props);
 
-        const logGroup = new cwlogs.LogGroup(this, 'ProductsApiLog');
+        const logGroup = new cwlogs.LogGroup(this, 'ApiLog');
 
-        const api = new apigateway.RestApi(this, 'products-api', {
-        restApiName: 'Products Service',
-        description: 'This is the Products service',
+        const api = new apigateway.RestApi(this, 'api', {
+        restApiName: 'My API Service',
+        description: 'This is my API service',
         deployOptions: {
             accessLogDestination: new apigateway.LogGroupLogDestination(logGroup),
             accessLogFormat: apigateway.AccessLogFormat.jsonWithStandardFields({

@@ -14,13 +14,13 @@ export class InvoiceEventsFunctionStack extends cdk.Stack {
         props?: cdk.StackProps) {
         super(scope, id, props);
 
-        const dlq = new sqs.Queue(this, "InvoiceEventsDlq", {
+        const dlq = new sqs.Queue(this, 'InvoiceEventsDlq', {
             queueName: 'InvoiceEvents-dlq',
         });
 
         this.handler = new lambdaNodeJS.NodejsFunction(this, 'InvoiceEventsFunction', {
             functionName: 'InvoiceEventsFunction',
-            entry: 'lambda/invoiceEventsFunction.js',
+            entry: 'lambdas/invoiceEventsFunction.js',
             handler: 'handler',
             bundling: {
               minify: false,
