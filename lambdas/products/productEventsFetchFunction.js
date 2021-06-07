@@ -58,6 +58,16 @@ exports.handler = async function (event, context) {
             return {
                 body: JSON.stringify(events),
             };
+        } else if (event.queryStringParameters && event.queryStringParameters.username2) {
+            const username = event.queryStringParameters.username2;
+            const data = await getEventsByUsername2(username);
+
+            const events = convertItemsToEvents(data.Items);
+            console.log(`GET /product/events?username2=${username} will return 200 OK with ${events.length} events:`, events);
+
+            return {
+                body: JSON.stringify(events),
+            };
         }
     }
 
@@ -123,6 +133,52 @@ function getEventsByUsername(username) { // Se não tem índice, pesquisa por sc
             },
         };
         return ddbClient.scan(params).promise();
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function getEventsByUsername2(username) { // Pesquisa por índice
+    try {
+        const params = {
+            TableName: productEventsDdb,
+            IndexName: 'usernameIdx',
+            KeyConditionExpression: 'username = :username AND begins_with(pk, :prefix)',
+            ExpressionAttributeValues: {
+                ':username': username,
+                ':prefix': '#product_',
+            },
+        };
+        return ddbClient.query(params).promise();
+
+        // Exemplo se o índice só tivesse a chave, e a partir dele tivesse que
+        // buscar cada registro em paralelo:
+        /*const data = await ddbClient.query(params).promise();
+        const resultPromises = data.Items.map((item) => {
+            return getEvent(item.pk, item.sk);
+        });
+        const results = await Promise.all(resultPromises);
+
+        const items = results.map((result) => {
+            return result.Item
+        });
+
+        return convertItemsToEvents(items);*/
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+function getEvent(pk, sk) {
+    const params = {
+        TableName: productEventsDdb,
+        Key: {
+            pk: pk,
+            sk: sk,
+        },
+    };
+    try {
+        return ddbClient.get(params).promise();
     } catch (err) {
         console.error(err);
     }

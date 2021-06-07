@@ -20,13 +20,26 @@ export class EventsDdbStack extends cdk.Stack {
                 type: dynamodb.AttributeType.STRING,
             },
             timeToLiveAttribute: 'ttl', // cada registro pode ter um time to live diferente!
-            billingMode: dynamodb.BillingMode.PROVISIONED, // modo de cobrança sob demanda ou provisionado
-            readCapacity: 1, // capacidade de leitura e escrita inicial, unidade = operações de 400kb por segundo + requisições
-            writeCapacity: 1,
+            billingMode: dynamodb.BillingMode.PAY_PER_REQUEST, // modo de cobrança sob demanda ou provisionado
+            //readCapacity: 5, // capacidade de leitura e escrita inicial, unidade = operações de 400kb por segundo + requisições
+            //writeCapacity: 5,
         });
 
-        const readScaling = this.table.autoScaleReadCapacity({
-            maxCapacity: 4,
+        this.table.addGlobalSecondaryIndex({
+            indexName: 'usernameIdx',
+            partitionKey: {
+                name: 'username',
+                type: dynamodb.AttributeType.STRING
+            },
+            sortKey: {
+                name: 'pk',
+                type: dynamodb.AttributeType.STRING,
+            },
+            projectionType: dynamodb.ProjectionType.ALL, // INCLUDE = select specific attributes, KEY_ONLY = somente a chave
+        });
+
+        /*const readScaling = this.table.autoScaleReadCapacity({
+            maxCapacity: 40,
             minCapacity: 1,
         });
         readScaling.scaleOnUtilization({
@@ -36,13 +49,13 @@ export class EventsDdbStack extends cdk.Stack {
         });
 
         const writeScaling = this.table.autoScaleWriteCapacity({
-            maxCapacity: 4,
+            maxCapacity: 40,
             minCapacity: 1,
         });
         writeScaling.scaleOnUtilization({
             targetUtilizationPercent: 50, // a partir de quantos % de utilização começa a reagir
             scaleInCooldown: cdk.Duration.seconds(60), // tempo que espera para subir uma unidade de capacidade
             scaleOutCooldown: cdk.Duration.seconds(60),
-        });
+        });*/
     }
 }

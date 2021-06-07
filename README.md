@@ -38,6 +38,7 @@ This project's intention is to demostrate the use of the following AWS Managed S
     * Query vs Scan
     * Time to live attributes
     * Provisioned vs on-demand capacity
+    * Indexes: GSI, LSI, projections
 * S3
     * Bucket creation
     * Integration with Lambdas
@@ -49,6 +50,10 @@ This project's intention is to demostrate the use of the following AWS Managed S
     * Log levels
 * Cognito
     * APIs authentication / authorization
+    * Lambdas to interfere in the login process
+    * OAuth2
+    * SAML
+    * Google / Facebook integration
 
 [![Architecture](architecture.png)
 
