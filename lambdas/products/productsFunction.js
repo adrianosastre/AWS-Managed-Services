@@ -42,6 +42,8 @@ exports.handler = async function(event, context) {
         }
         else if (method === 'POST') {
             console.debug(`POST ...`);
+            console.log(`event.requestContext.authorizer:`, event.requestContext.authorizer); // log de autorização, cognito
+
             const product = JSON.parse(event.body);
             product.id = uuid.v4();
 

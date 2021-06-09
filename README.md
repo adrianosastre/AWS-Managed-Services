@@ -50,10 +50,10 @@ This project's intention is to demostrate the use of the following AWS Managed S
     * Log levels
 * Cognito
     * APIs authentication / authorization
-    * Lambdas to interfere in the login process
+    * Lambdas to interfere in the login process (triggers)
     * OAuth2
-    * SAML
-    * Google / Facebook integration
+    * TODO: SAML
+    * TODO: Google / Facebook integration
 
 [![Architecture](architecture.png)
 

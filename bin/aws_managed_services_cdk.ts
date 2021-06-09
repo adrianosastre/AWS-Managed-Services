@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
-import { ApiStack } from '../stacks/api/api_cdk-stack';
+import { ApiCognitoAndTriggerFunctionsStack } from '../stacks/api/apiCognitoAndTriggerFunctions_cdk-stack';
 import { ProductsFunctionCdkStack } from '../stacks/products/productsFunction_cdk-stack';
 import { ProductsDdbStack } from '../stacks/products/productsDdb_cdk-stack';
 import { ProductEventsQueueStack } from '../stacks/events/productEventsQueue_cdk-stack';
@@ -83,14 +83,14 @@ const productEventsFetchFunctionStack = new ProductEventsFetchFunctionStack(
 );
 
 // Stack da API Gateway:
-const apiStack = new ApiStack(
+const apiStack = new ApiCognitoAndTriggerFunctionsStack(
     app,
-    'ApiStack',
+    'ApiCognitoAndTriggerFunctionsStack',
     productsFunctionStack.handler,
     invoiceImportS3AndFunctionsStack.urlHandler,
     productEventsFetchFunctionStack.handler
 );
-productsFunctionStack.addDependency(productsFunctionStack);
-productsFunctionStack.addDependency(invoiceImportS3AndFunctionsStack);
-productsFunctionStack.addDependency(productEventsFetchFunctionStack);
+apiStack.addDependency(productsFunctionStack);
+apiStack.addDependency(invoiceImportS3AndFunctionsStack);
+apiStack.addDependency(productEventsFetchFunctionStack);
 
