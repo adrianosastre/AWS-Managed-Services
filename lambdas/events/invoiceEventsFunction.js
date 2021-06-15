@@ -20,7 +20,7 @@ exports.handler = async function(event, context) {
 
     await createEvent(event.invoice, event.key);
 
-    // dar uma resposta a quem nos invocou:
+    // dar uma resposta a quem invocou esse lambda:
     context.succeed(JSON.stringify({
         invoiceEventCreated: true,
         message: 'OK',

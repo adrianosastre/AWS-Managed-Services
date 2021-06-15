@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
-import { ApiCognitoAndTriggerFunctionsStack } from '../stacks/api/apiCognitoAndTriggerFunctions_cdk-stack';
+import { ApiStack } from '../stacks/api/api_cdk-stack';
+import { CognitoAndTriggerFunctionsStack } from '../stacks/cognito/cognitoAndTriggerFunctions_cdk-stack';
 import { ProductsFunctionCdkStack } from '../stacks/products/productsFunction_cdk-stack';
 import { ProductsDdbStack } from '../stacks/products/productsDdb_cdk-stack';
 import { ProductEventsQueueStack } from '../stacks/events/productEventsQueue_cdk-stack';
@@ -13,6 +14,12 @@ import { InvoiceEventsFunctionStack } from '../stacks/events/invoiceEventsFuncti
 import { ProductEventsFetchFunctionStack } from '../stacks/products/productEventsFetchFunction_cdk-stack';
 
 const app = new cdk.App();
+
+// Stack do Cognito User Pool e Trigger Functions:
+const cognitoAndTriggerFunctionsStack = new CognitoAndTriggerFunctionsStack(
+    app,
+    'CognitoAndTriggerFunctionsStack'
+);
 
 // Stack da tabela de produtos:
 const productsDdbStack = new ProductsDdbStack(
@@ -30,9 +37,11 @@ const productEventsQueueStack = new ProductEventsQueueStack(
 const productsFunctionStack = new ProductsFunctionCdkStack(
     app,
     'ProductsFunctionStack',
+    cognitoAndTriggerFunctionsStack.getCurrentUserHandler,
     productsDdbStack.table,
     productEventsQueueStack.productEventsQueue
 );
+productsFunctionStack.addDependency(cognitoAndTriggerFunctionsStack);
 productsFunctionStack.addDependency(productsDdbStack);
 productsFunctionStack.addDependency(productEventsQueueStack);
 
@@ -76,6 +85,7 @@ const invoiceImportS3AndFunctionsStack = new InvoiceImportS3AndFunctionsStack(
 invoiceImportS3AndFunctionsStack.addDependency(invoicesDdbStack);
 invoiceImportS3AndFunctionsStack.addDependency(invoiceEventsFunctionStack);
 
+// Stack para buscar eventos de produtos:
 const productEventsFetchFunctionStack = new ProductEventsFetchFunctionStack(
     app,
     'ProductEventsFetchFunctionStack',
@@ -83,14 +93,15 @@ const productEventsFetchFunctionStack = new ProductEventsFetchFunctionStack(
 );
 
 // Stack da API Gateway:
-const apiStack = new ApiCognitoAndTriggerFunctionsStack(
+const apiStack = new ApiStack(
     app,
-    'ApiCognitoAndTriggerFunctionsStack',
+    'ApiStack',
+    cognitoAndTriggerFunctionsStack.cognitoUserPool,
     productsFunctionStack.handler,
     invoiceImportS3AndFunctionsStack.urlHandler,
     productEventsFetchFunctionStack.handler
 );
+apiStack.addDependency(cognitoAndTriggerFunctionsStack);
 apiStack.addDependency(productsFunctionStack);
 apiStack.addDependency(invoiceImportS3AndFunctionsStack);
 apiStack.addDependency(productEventsFetchFunctionStack);
-

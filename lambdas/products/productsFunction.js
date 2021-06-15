@@ -1,3 +1,5 @@
+'use strict';
+
 const AWS = require('aws-sdk');
 const AWSXRay = require('aws-xray-sdk-core');
 const uuid = require('uuid');
@@ -9,6 +11,7 @@ const xRay = AWSXRay.captureAWS(require('aws-sdk')); // tudo o que acontecer den
 const productsDdb = process.env.PRODUCTS_DDB;
 const awsRegion = process.env.AWS_REGION;
 const productEventsQueueUrl = process.env.PRODUCT_EVENTS_QUEUE_URL;
+const getCurrentUserFunctionName = process.env.GET_CURRENT_USER_FUNCTION_NAME;
 
 AWS.config.update({
     region: awsRegion,
@@ -16,6 +19,7 @@ AWS.config.update({
 
 const ddbClient = new AWS.DynamoDB.DocumentClient(); // cliente que se conecta no dynamo
 const sqsClient = new AWS.SQS({apiVersion: '2012-11-05'}); // cliente que se conecta ao sqs
+const lambdaClient = new AWS.Lambda();
 
 // a partir daqui faz parte da invocação do lambda:
 exports.handler = async function(event, context) {
@@ -47,9 +51,10 @@ exports.handler = async function(event, context) {
             const product = JSON.parse(event.body);
             product.id = uuid.v4();
 
-            const createProductPromise = createProduct(product);
+            const username = await getCurrentUsername(event.headers.Authorization);
 
-            const messageSentPromise = sendMessage(product, 'PRODUCT_CREATED', 'adrianosastre', lambdaRequestId);
+            const createProductPromise = createProduct(product);
+            const messageSentPromise = sendMessage(product, 'PRODUCT_CREATED', username, lambdaRequestId);
 
             const results = await Promise.all([createProductPromise, messageSentPromise]);
 
@@ -93,9 +98,10 @@ exports.handler = async function(event, context) {
                 const product = JSON.parse(event.body);
                 product.id = productId;
 
-                const updateProductPromise = updateProduct(productId, product);
+                const username = await getCurrentUsername(event.headers.Authorization);
 
-                const messageSentPromise = sendMessage(product, 'PRODUCT_UPDATED', 'gira', lambdaRequestId);
+                const updateProductPromise = updateProduct(productId, product);
+                const messageSentPromise = sendMessage(product, 'PRODUCT_UPDATED', username, lambdaRequestId);
 
                 const results = await Promise.all([updateProductPromise, messageSentPromise]);
                 console.debug(`PUT/${productId} data:`, results[0]);
@@ -125,7 +131,9 @@ exports.handler = async function(event, context) {
                 console.debug(`DELETE/${productId} data:`, data);
 
                 const product = data.Item;
-                const messageSent = await sendMessage(product, 'PRODUCT_DELETED', 'JM', lambdaRequestId);
+                const username = await getCurrentUsername(event.headers.Authorization);
+
+                const messageSent = await sendMessage(product, 'PRODUCT_DELETED', username, lambdaRequestId);
 
                 console.log(`DELETE/${productId} sent PRODUCT_DELETED message with id: ${messageSent.MessageId}`);
                 console.log(`DELETE/${productId} will return 200 OK`);
@@ -151,6 +159,28 @@ exports.handler = async function(event, context) {
         body: JSON.stringify('Bad Request!'),
     };
 };
+
+async function getCurrentUsername(token) {
+    const params = {
+        FunctionName: getCurrentUserFunctionName,
+        InvocationType: 'RequestResponse', // RequestResponse = invocação síncrona
+        Payload: JSON.stringify({
+            token: token
+        }),
+    };
+    console.debug(`will invoke lambda ${getCurrentUserFunctionName} with params: `, params);
+
+    var result = await lambdaClient.invoke(params).promise();
+
+    console.debug(`lambda ${getCurrentUserFunctionName} returned: StatusCode: ${result.StatusCode}, Payload: ${result.Payload} `);
+
+    if (result.StatusCode != 200) {
+        console.error(`Could not get current user: ${payload.StatusCode}`);
+        return null;
+    }
+
+    return result.Payload;
+}
 
 function sendMessage(product, event, username, lambdaRequestId) {
     let params = {

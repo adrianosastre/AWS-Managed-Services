@@ -10,6 +10,7 @@ export class ProductsFunctionCdkStack extends cdk.Stack {
   constructor(
     scope: cdk.Construct,
     id: string,
+    getCurrentUserHandler: lambdaNodeJS.NodejsFunction,
     productsDdb: dynamodb.Table,
     productsEventsQueue: sqs.Queue,
     props?: cdk.StackProps) {
@@ -29,10 +30,13 @@ export class ProductsFunctionCdkStack extends cdk.Stack {
       environment: {
         PRODUCTS_DDB: productsDdb.tableName,
         PRODUCT_EVENTS_QUEUE_URL: productsEventsQueue.queueUrl,
+        GET_CURRENT_USER_FUNCTION_NAME: getCurrentUserHandler.functionName,
       },
     });
 
     productsDdb.grantReadWriteData(this.handler); // dar permissão ao lambda para ler/escrever na tabela
     productsEventsQueue.grantSendMessages(this.handler); // dar permissão ao lambda escrever nessa fila
+    getCurrentUserHandler.grantInvoke(this.handler); // permite a esse lambda invocar o outro
+
   }
 }
